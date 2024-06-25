@@ -8,6 +8,15 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (20, 20)
         self.walls = walls
+        self.bombs = pygame.sprite.Group()
+        self.countBomb = 2
+
+    def setBomb(self, bomb):
+        bomb_collide = pygame.sprite.spritecollide(bomb, self.bombs, False)
+        if not bomb_collide:
+            self.bombs.add(bomb)
+            if self.countBomb >= len(self.bombs):
+                all_sprites.add(bomb)
     def update(self, dx, dy):
         # Ограничение на диагональное перемещение
         if dx != 0 and dy != 0:
