@@ -11,9 +11,12 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 
 walls = pygame.sprite.Group() # Группа стен
-wall1 = Wall(100,100) # Создаём стену
-wall2 = Wall(400,400) # Создаём стену
-walls.add(wall1, wall2)
+for i in range(len(MAP)):
+    for j in range(len(MAP[i])):
+        if MAP[i][j] == 1:
+            wall = Wall(BLOCK_SIZE*j, BLOCK_SIZE*i)
+            walls.add(wall)
+
 player = Player(walls)
 all_sprites.add(player, walls)
 while True:
@@ -35,6 +38,8 @@ while True:
         bomb = Bomb(player.rect.center) # Создали бомбу
         player.setBomb(bomb) # Пробуем установить бомбу на игровом поле
     player.update(dx, dy)
+    for bomb in player.bombs:
+        bomb.update()
     for x in range(0, SCREEN_WIDTH, backgroundWidth):
         for y in range(0, SCREEN_HEIGHT, backgroundHeight):
             screen.blit(backgroundImage, (x,y))
