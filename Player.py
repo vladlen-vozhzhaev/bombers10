@@ -17,6 +17,8 @@ class Player(pygame.sprite.Sprite):
             self.bombs.add(bomb)
             if self.countBomb >= len(self.bombs):
                 all_sprites.add(bomb)
+            else:
+                self.bombs.remove(bomb)
     def update(self, dx, dy):
         # Ограничение на диагональное перемещение
         if dx != 0 and dy != 0:
