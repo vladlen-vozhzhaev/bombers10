@@ -31,18 +31,52 @@ class Bomb(pygame.sprite.Sprite):
             self.explodeY.rect = self.explodeY.image.get_rect()
             self.explodeX.rect.center = self.rect.center
             self.explodeY.rect.center = self.rect.center
+            l_wall_r_x = False
+            l_wall_r_y = False
             x_collide = pygame.sprite.spritecollide(self.explodeX, all_sprites, False)
             y_collide = pygame.sprite.spritecollide(self.explodeY, all_sprites, False)
             all_sprites.remove(self)
             for sprite in x_collide:
                 if sprite.__class__ == Wall.Wall:
                     print(sprite.rect.left == self.explodeX.rect.right - BLOCK_SIZE*self.radius/2)
-                    if sprite.rect.left == self.explodeX.rect.right - BLOCK_SIZE*self.radius/2:
+                    if l_wall_r_x:
+                        self.explodeX.image = pygame.transform.scale(self.explodeX.image, (BLOCK_SIZE, BLOCK_SIZE))
+                        self.explodeX.rect = self.explodeX.image.get_rect()
+                        self.explodeX.rect.x = self.rect.x
+                        self.explodeX.rect.y = self.rect.y
+                    elif sprite.rect.left == self.explodeX.rect.right - BLOCK_SIZE*self.radius/2:
                         self.explodeX.image = pygame.transform.scale(self.explodeX.image, (BLOCK_SIZE + BLOCK_SIZE * self.radius / 2, BLOCK_SIZE))
+                        self.explodeX.rect = self.explodeX.image.get_rect()
+                        self.explodeX.rect.x = sprite.rect.left-BLOCK_SIZE-BLOCK_SIZE*self.radius/2
+                        self.explodeX.rect.y = self.rect.y
+                        l_wall_r_x = True
+                    elif sprite.rect.right == self.explodeX.rect.left + BLOCK_SIZE*self.radius/2:
+                        self.explodeX.image = pygame.transform.scale(self.explodeX.image, (BLOCK_SIZE + BLOCK_SIZE * self.radius / 2, BLOCK_SIZE))
+                        self.explodeX.rect = self.explodeX.image.get_rect()
+                        self.explodeX.rect.x = sprite.rect.right
+                        self.explodeX.rect.y = self.rect.y
+                        l_wall_r_x = True
+            for sprite in y_collide:
+                if sprite.__class__ == Wall.Wall:
+                    if l_wall_r_y:
+                        self.explodeY.image = pygame.transform.scale(self.explodeY.image, (BLOCK_SIZE, BLOCK_SIZE))
+                        self.explodeY.rect = self.explodeX.image.get_rect()
+                        self.explodeY.rect.x = self.rect.x
+                        self.explodeY.rect.y = self.rect.y
+                    elif sprite.rect.bottom == self.explodeY.rect.top + BLOCK_SIZE*self.radius/2:
+                        self.explodeY.image = pygame.transform.scale(self.explodeY.image, (BLOCK_SIZE, BLOCK_SIZE + BLOCK_SIZE*self.radius/2))
+                        self.explodeY.rect = self.explodeY.image.get_rect()
+                        self.explodeY.rect.x = sprite.rect.x
+                        self.explodeY.rect.y = self.rect.y
+                        l_wall_r_y = True
+                    elif sprite.rect.top == self.explodeY.rect.bottom - BLOCK_SIZE*self.radius/2:
+                        self.explodeY.image = pygame.transform.scale(self.explodeY.image, (BLOCK_SIZE, BLOCK_SIZE + BLOCK_SIZE * self.radius / 2))
+                        self.explodeY.rect = self.explodeY.image.get_rect()
+                        self.explodeY.rect.x = sprite.rect.x
+                        self.explodeY.rect.y = self.rect.y - BLOCK_SIZE - BLOCK_SIZE*self.radius/2
+                        l_wall_r_y = True
 
-
-
-            all_sprites.add(self.explodeX)
+            all_sprites.add(self.explodeX, self.explodeY)
             x_collide = pygame.sprite.spritecollide(self.explodeX, all_sprites, False)
             y_collide = pygame.sprite.spritecollide(self.explodeY, all_sprites, False)
             for sprite in x_collide:
