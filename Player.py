@@ -10,6 +10,7 @@ class Player(pygame.sprite.Sprite):
         self.walls = walls
         self.bombs = pygame.sprite.Group()
         self.countBomb = 2
+        self.__hp = 3
 
     def setBomb(self, bomb):
         bomb_collide = pygame.sprite.spritecollide(bomb, self.bombs, False)
@@ -19,6 +20,12 @@ class Player(pygame.sprite.Sprite):
                 all_sprites.add(bomb)
             else:
                 self.bombs.remove(bomb)
+    def setHp(self, hp):
+        self.__hp += hp
+        print("Здоровье игрока ", self.__hp)
+        if self.__hp <= 0:
+            print("Игра оконена")
+            all_sprites.remove(self)
     def update(self, dx, dy):
         # Ограничение на диагональное перемещение
         if dx != 0 and dy != 0:

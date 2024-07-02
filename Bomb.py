@@ -1,6 +1,7 @@
 import pygame
 
 import Box
+import Player
 import Wall
 from configGame import *
 
@@ -73,7 +74,7 @@ class Bomb(pygame.sprite.Sprite):
                         self.explodeY.image = pygame.transform.scale(self.explodeY.image, (BLOCK_SIZE, BLOCK_SIZE + BLOCK_SIZE * self.radius / 2))
                         self.explodeY.rect = self.explodeY.image.get_rect()
                         self.explodeY.rect.x = sprite.rect.x
-                        self.explodeY.rect.y = self.rect.y - BLOCK_SIZE - BLOCK_SIZE*self.radius/2
+                        self.explodeY.rect.y = self.rect.y - BLOCK_SIZE*self.radius/2
                         l_wall_r_y = True
 
             all_sprites.add(self.explodeX, self.explodeY)
@@ -83,10 +84,14 @@ class Bomb(pygame.sprite.Sprite):
                 if sprite.__class__ == Box.Box:
                     all_sprites.remove(sprite)
                     walls.remove(sprite)
+                elif sprite.__class__ == Player.Player:
+                    sprite.setHp(-1)
             for sprite in y_collide:
                 if sprite.__class__ == Box.Box:
                     all_sprites.remove(sprite)
                     walls.remove(sprite)
+                elif sprite.__class__ == Player.Player:
+                    sprite.setHp(-1)
             self.exploded = True
         elif current_time - self.start_time > 3500 and self.explodeRender:
             all_sprites.remove(self.explodeX, self.explodeY)
